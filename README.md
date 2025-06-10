@@ -112,4 +112,4 @@ This server is designed to work with the [Munki](https://github.com/munki/munki)
 
 ## License
 
-This project is developed by Stripe for internal use with the Munki.
+This project is developed by Stripe for internal use with Munki.
