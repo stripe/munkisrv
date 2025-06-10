@@ -1,0 +1,13 @@
+# Server configurations
+server:
+  host: "localhost"
+  port: ":3000"
+
+# Cloudfront configurations
+cloudfront:
+  url: "https://example.cloudfront.net"
+  key_id: "K1HFGXOMBB6TFF"
+  private_key: |
+    -----BEGIN PRIVATE KEY-----
+    development key content here
+    -----END PRIVATE KEY-----
