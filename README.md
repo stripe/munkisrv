@@ -110,6 +110,10 @@ This server is designed to work with the [Munki](https://github.com/munki/munki)
 - **Client Resources**: Additional resources for Munki clients
 - **Packages**: Software packages (served via CloudFront)
 
-## License
+## Munki Client Configuration
 
-This project is developed by Stripe for internal use with Munki.
+At a minimum, configure your munki client to access the `/repo` path at your domain.
+
+```bash
+sudo defaults write /Library/Preferences/ManagedInstalls.plist SoftwareRepoURL https://<yourdomain>/repo
+```
