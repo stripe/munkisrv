@@ -50,6 +50,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/healthz", healthz(munkirepo.Repo))
+	r.Head("/healthz", healthz(munkirepo.Repo))
 	r.Get("/repo/*", munkiRepoFunc)
 	r.Get("/repo/pkgs/*", munkiPkgFunc(cfg.Cloudfront.URL, signer))
 	r.Head("/repo/pkgs/*", munkiPkgFunc(cfg.Cloudfront.URL, signer))
@@ -122,5 +123,6 @@ func healthz(repo embed.FS) http.HandlerFunc {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 	}
 }
