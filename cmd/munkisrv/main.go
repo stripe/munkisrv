@@ -52,6 +52,7 @@ func main() {
 	r.Get("/healthz", healthz(munkirepo.Repo))
 	r.Get("/repo/*", munkiRepoFunc)
 	r.Get("/repo/pkgs/*", munkiPkgFunc(cfg.Cloudfront.URL, signer))
+	r.Head("/repo/pkgs/*", munkiPkgFunc(cfg.Cloudfront.URL, signer))
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page not found", http.StatusNotFound)
