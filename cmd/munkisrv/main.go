@@ -87,7 +87,7 @@ func main() {
 }
 
 func munkiRepoFunc(w http.ResponseWriter, r *http.Request) {
-	fs := http.StripPrefix("/repo/", http.FileServer(http.FS(munkirepo.Repo)))
+	fs := http.StripPrefix("/repo/", http.FileServerFS(munkirepo.Repo))
 	fs.ServeHTTP(w, r)
 }
 
