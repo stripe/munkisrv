@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/signal"
 	"path"
+	"strings"
 	"syscall"
 	"time"
 
@@ -88,6 +89,11 @@ func main() {
 
 func munkiRepoFunc(w http.ResponseWriter, r *http.Request) {
 	fs := http.StripPrefix("/repo/", http.FileServerFS(munkirepo.Repo))
+	// Don't list directory contents
+	if strings.HasSuffix(r.URL.Path, "/") {
+		http.NotFound(w, r)
+		return
+	}
 	fs.ServeHTTP(w, r)
 }
 
