@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	github.com/aws/aws-sdk-go-v2/feature/cloudfront/sign v1.8.3
-	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-chi/chi/v5 v5.2.2
 	github.com/spf13/viper v1.19.0
 )
 
