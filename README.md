@@ -1,6 +1,6 @@
 # munkisrv
 
-A Go web server for serving [Munki](https://github.com/munki/munki) repositories with AWS CloudFront integration for secure package distribution.
+[munkisrv](https://pkg.go.dev/github.com/stripe/munkisrv) is a Go web server for serving [Munki](https://github.com/munki/munki) repositories. It comes with built-in support for generating AWS CloudFront pre-signed URLs.
 
 ## Overview
 
