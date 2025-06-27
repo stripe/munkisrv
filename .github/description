@@ -1,0 +1,1 @@
+A lightweight Go web server for serving Munki repositories with AWS CloudFront signed URL support for secure package downloads. 
