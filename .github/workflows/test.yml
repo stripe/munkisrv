@@ -17,8 +17,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-          path: "src"
 
     - name: Set up Go ${{ matrix.go.version }}
       uses: actions/setup-go@v4
