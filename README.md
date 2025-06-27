@@ -47,7 +47,7 @@ cloudfront:
     -----END PRIVATE KEY-----
 ```
 
-### Environment Variables
+### Environment variables
 
 Configuration can be overridden using environment variables with the prefix `ENV_`:
 
@@ -96,11 +96,11 @@ The server will start on the configured port (default: `:3000`) and serve:
 
 The server uses AWS CloudFront signed URLs to secure package downloads. Private keys are parsed and validated at startup to ensure proper cryptographic operations.
 
-## Health Monitoring
+## Health monitoring
 
 The `/healthz` endpoint checks the availability of the embedded Munki repository by attempting to open the `catalogs/all` file. This ensures the server is properly configured and the repository is accessible.
 
-## Munki Integration
+## Munki integration
 
 This server is designed to work with the [Munki](https://github.com/munki/munki) open-source software deployment system for macOS. It serves the repository structure that Munki clients expect:
 
@@ -110,7 +110,7 @@ This server is designed to work with the [Munki](https://github.com/munki/munki)
 - **Client Resources**: Additional resources for Munki clients
 - **Packages**: Software packages (served via CloudFront)
 
-## Munki Client Configuration
+## Munki client configuration
 
 At a minimum, configure your munki client to access the `/repo` path at your domain.
 
