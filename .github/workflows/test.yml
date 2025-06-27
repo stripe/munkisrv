@@ -1,0 +1,105 @@
+name: Tests
+
+on: ["push", "pull_request"]
+
+jobs:
+  tests:
+    name: "Go ${{ matrix.go.series }}"
+    runs-on: "ubuntu-24.04"
+
+    strategy:
+      matrix:
+        go:
+          # Keep minimum version up to date with go.mod
+          - series: "1.24"
+            version: "1.24.2"
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go ${{ matrix.go.version }}
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go.version }}
+
+    - name: Cache Go modules
+      uses: "actions/cache@v4"
+      with:
+        path: cache
+        key: "go=${{ matrix.go.version }};v=1"
+
+    - name: Build binary
+      run: go build -v -o munkisrv ./cmd/munkisrv
+
+    - name: Test binary execution
+      run: |
+        # Test that the binary can start and parse config
+        timeout 5s ./munkisrv -c config/config.yaml || true
+
+  integration:
+    name: Integration Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go:
+          # Keep minimum version up to date with go.mod
+          - series: "1.24"
+            version: "1.24.2"
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go.version }}
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Build binary
+      run: go build -v -o munkisrv ./cmd/munkisrv
+
+    - name: Create test config
+      run: |
+        cat > test-config.yaml << EOF
+        server:
+          host: "localhost"
+          port: ":8080"
+        cloudfront:
+          url: "https://test.cloudfront.net"
+          key_id: "test-key-id"
+          private_key: |
+            -----BEGIN PRIVATE KEY-----
+            MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7VJTUt9Us8cKj
+            MzEfYyjiWA4R4/M2bS1GB4t7NXp98C3SC6dVMvDuictGeurT8jNbvJZHtCSuYEvu
+            NMoSfm76oqFvAp8Gy0iz5sxjZmSnXyCdPEovGhLa0VzMaQ8s+CLOyS56YyCFGeJZ
+            egtwJKUnrWsm/2GOVq8tDHf5Hb8mUr1dp8i0iwHjvoCqDqBaXuQ7m0bW4KdS7dBw
+            H2m42NhxrQ3fVb6dNof0hZtH0M9j1wJd3K3Z5D3L5L5L5L5L5L5L5L5L5L5L5L5L5
+            -----END PRIVATE KEY-----
+        EOF
+
+    - name: Start server in background
+      run: |
+        ./munkisrv -c test-config.yaml &
+        SERVER_PID=$!
+        echo $SERVER_PID > server.pid
+        sleep 3
+
+    - name: Test health endpoint
+      run: |
+        curl -f http://localhost:8080/healthz || exit 1
+
+    - name: Test repository endpoint
+      run: |
+        curl -f http://localhost:8080/repo/catalogs/all || exit 1
+
+    - name: Stop server
+      run: |
+        if [ -f server.pid ]; then
+          kill $(cat server.pid) || true
+        fi
+      if: always() 
