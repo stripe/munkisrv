@@ -60,16 +60,10 @@ Configuration can be overridden using environment variables with the prefix `ENV
 ## Installation
 
 1. Clone the repository
-2. Install dependencies:
+2. Build the binary:
 
    ```bash
-   go mod tidy
-   ```
-
-3. Build the binary:
-
-   ```bash
-   go build -o munkisrv cmd/munkisrv/main.go
+   go build ./cmd/munkisrv
    ```
 
 ## Usage
@@ -85,6 +79,18 @@ The server will start on the configured port (default: `:3000`) and serve:
 - Static repository files at `/repo/*`
 - Package downloads via signed CloudFront URLs at `/repo/pkgs/*`
 - Health checks at `/healthz`
+
+Send a test request:
+
+```bash
+curl http://127.0.0.1:3000/repo/catalogs/all
+```
+
+Configure munki to connect:
+
+```bash
+sudo defaults write /Library/Preferences/ManagedInstalls.plist SoftwareRepoURL http://127.0.0.1:3000/repo
+```
 
 ## Dependencies
 
@@ -116,4 +122,10 @@ At a minimum, configure your munki client to access the `/repo` path at your dom
 
 ```bash
 sudo defaults write /Library/Preferences/ManagedInstalls.plist SoftwareRepoURL https://<yourdomain>/repo
+```
+
+Ensure munki is configured to follow HTTP redirects.
+
+```bash
+sudo defaults write /Library/Preferences/ManagedInstalls.plist FollowHTTPRedirects https
 ```
