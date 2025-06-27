@@ -71,15 +71,21 @@ jobs:
           port: ":8080"
         cloudfront:
           url: "https://test.cloudfront.net"
-          key_id: "test-key-id"
+          key_id: "K1HFGXOMBB6TFF"
           private_key: |
-            -----BEGIN PRIVATE KEY-----
-            MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7VJTUt9Us8cKj
-            MzEfYyjiWA4R4/M2bS1GB4t7NXp98C3SC6dVMvDuictGeurT8jNbvJZHtCSuYEvu
-            NMoSfm76oqFvAp8Gy0iz5sxjZmSnXyCdPEovGhLa0VzMaQ8s+CLOyS56YyCFGeJZ
-            egtwJKUnrWsm/2GOVq8tDHf5Hb8mUr1dp8i0iwHjvoCqDqBaXuQ7m0bW4KdS7dBw
-            H2m42NhxrQ3fVb6dNof0hZtH0M9j1wJd3K3Z5D3L5L5L5L5L5L5L5L5L5L5L5L5L5
-            -----END PRIVATE KEY-----
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEpAIBAAKCAQEAvxJndkREqFkXg2b6QRNCxYy67Kj/tQfR5tGP1k18wgInS8W6
+            vxwhAIr9JdhVjIkyRfn13eM9kqH8ky5UkiCP0cbxVkHgSdYUWyaqAqBQDSH6vr9R
+            icbo6c2APVWf8VjUxhyzK6tWHnKEZEP2bY2Y22E9lQm8nucEs3P0uYIx1hEx+d6
+            WE1FkP7L6PWSsn6twhQ3VW0WmLuFQbQ1tFuyigMxAGcxz+CsxLnMo7OGtHrqC7an
+            QgxLkq8atpoexi0nebdRZgxwhFFCIo9XgRBU7Q1VX5Pj1VstscRxlMCz0mxvuapi
+            rLu2RAdD8m6jwpw1F1QHRCQIDAQABAoIBAQCm5inobyE5GRKHOnVXBN+9QqSenNL
+            i+ZlO+CyExH6yWGoeW81F4m5FWzpM2O/f0S31thI9i+1K5tn8jqu4CywujUxddXG
+            VjrypLVngk5y4j5P5WdwZkJlxtVqtVK6ZxBLp7eCdbL0U9EtJTaS4/4Sg3MjyvIq
+            GtkR64fuRkHdjLqUi3goZUUgl1Hb7j4W3BuL6xwSxM7aKjGZHbXZxJz9UZ8V7jqW
+            QZxJjLWjTRf6AlwjBp4Z7hKhm4E6aRfwtCg7XaFz8J4y4I4Q4I4Q4I4Q4I4Q4I4Q
+            4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q4I4Q
+            -----END RSA PRIVATE KEY-----
         EOF
 
     - name: Start server in background
