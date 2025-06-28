@@ -26,8 +26,13 @@ jobs:
     - name: Cache Go modules
       uses: "actions/cache@v4"
       with:
-        path: cache
-        key: "go=${{ matrix.go.version }};v=1"
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ matrix.go.version }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ matrix.go.version }}-
+          ${{ runner.os }}-go-
 
     - name: Run tests
       run: go test ./...
@@ -52,8 +57,16 @@ jobs:
       with:
         go-version: ${{ matrix.go.version }}
 
-    - name: Download dependencies
-      run: go mod download
+    - name: Cache Go modules
+      uses: "actions/cache@v4"
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ matrix.go.version }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ matrix.go.version }}-
+          ${{ runner.os }}-go-
 
     - name: Build binary
       run: go build -v -o munkisrv ./cmd/munkisrv
