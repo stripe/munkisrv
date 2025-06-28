@@ -29,6 +29,9 @@ jobs:
         path: cache
         key: "go=${{ matrix.go.version }};v=1"
 
+    - name: Run tests
+      run: go test ./...
+
     - name: Create test config
       run: |
         cat > test-config.yaml << EOF
