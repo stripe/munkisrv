@@ -16,13 +16,13 @@ For example, if your pkginfo file contains:
 
 ```xml
 <key>installer_item_location</key>
-<string>apps/google/chrome/googlechrome-133.0.6943.127.dmg</string>
+<string>apps/myapp/myapp-133.0.6943.127.dmg</string>
 ```
 
 Then your S3 upload path should be:
 
 ```bash
-s3://your-bucket-name/repo/pkgs/apps/google/chrome/googlechrome-133.0.6943.127.dmg
+s3://your-bucket-name/repo/pkgs/apps/myapp/myapp-133.0.6943.127.dmg
 ```
 
 ### Upload process
@@ -32,10 +32,10 @@ The upload process varies by organization, but here are common approaches:
 #### Option 1: AWS CLI
 ```bash
 # Upload a package to S3
-aws s3 cp googlechrome-133.0.6943.127.dmg s3://your-bucket-name/repo/pkgs/apps/google/chrome/
+aws s3 cp myapp-133.0.6943.127.dmg s3://your-bucket-name/repo/pkgs/apps/myapp/
 
 # Upload with specific path matching pkginfo
-aws s3 cp googlechrome-133.0.6943.127.dmg s3://your-bucket-name/repo/pkgs/apps/google/chrome/googlechrome-133.0.6943.127.dmg
+aws s3 cp myapp-133.0.6943.127.dmg s3://your-bucket-name/repo/pkgs/apps/myapp/myapp-133.0.6943.127.dmg
 ```
 
 #### Option 2: AWS SDK/API
@@ -96,7 +96,7 @@ cloudfront:
 
 ### Request Flow
 
-1. **Munki client** requests a package: `/repo/pkgs/apps/google/chrome/googlechrome-133.0.6943.127.dmg`
+1. **Munki client** requests a package: `/repo/pkgs/apps/myapp/myapp-133.0.6943.127.dmg`
 2. **munkisrv** receives the request and constructs the full CloudFront URL
 3. **munkisrv** generates a signed URL** with a 1-hour expiration
 4. **munkisrv** redirects the client to the signed CloudFront URL
