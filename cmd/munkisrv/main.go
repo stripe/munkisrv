@@ -20,6 +20,7 @@ import (
 	"github.com/stripe/munkisrv/config"
 	"github.com/stripe/munkisrv/keyutils"
 	"github.com/stripe/munkisrv/munkirepo"
+	"github.com/stripe/munkisrv/tlsutils"
 
 	"github.com/aws/aws-sdk-go-v2/feature/cloudfront/sign"
 	"github.com/go-chi/chi/v5"
@@ -34,6 +35,11 @@ func main() {
 	cfg, err := config.LoadConfig(*configPath)
 	if err != nil {
 		log.Fatalf("failed to load %s, err: %s\n", *configPath, err)
+	}
+
+	// Validate TLS configuration
+	if err := tlsutils.ValidateTLSConfig(cfg.TLS); err != nil {
+		log.Fatalf("TLS configuration error: %s\n", err)
 	}
 
 	// Create signer for CloudFront signed URLs
@@ -60,16 +66,30 @@ func main() {
 		http.Error(w, "Page not found", http.StatusNotFound)
 	})
 
+	// Setup TLS configuration
+	tlsConfig, err := tlsutils.SetupTLSConfig(cfg.TLS)
+	if err != nil {
+		log.Fatalf("Failed to setup TLS configuration: %s\n", err)
+	}
+
 	// Start http server
 	server := &http.Server{
-		Addr:    cfg.Server.Port,
-		Handler: r,
+		Addr:      cfg.Server.Port,
+		Handler:   r,
+		TLSConfig: tlsConfig,
 	}
 
 	go func() {
 		fmt.Printf("Starting server on port %s...\n", cfg.Server.Port)
-		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("HTTP server error: %v", err)
+		if cfg.TLS.Enabled {
+			fmt.Printf("TLS enabled with client auth: %s\n", cfg.TLS.ClientAuth)
+			if err := server.ListenAndServeTLS("", ""); !errors.Is(err, http.ErrServerClosed) {
+				log.Fatalf("HTTPS server error: %v", err)
+			}
+		} else {
+			if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+				log.Fatalf("HTTP server error: %v", err)
+			}
 		}
 		log.Println("Stopped serving new connections.")
 	}()
