@@ -4,6 +4,8 @@ permissions:
 
 on: ["push", "pull_request"]
 
+permissions:
+  contents: read
 jobs:
   tests:
     name: "Go ${{ matrix.go.series }}"
