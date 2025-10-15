@@ -126,3 +126,61 @@ func TestLoadConfigInvalidPath(t *testing.T) {
 		t.Error("Expected error when loading non-existent config file")
 	}
 }
+
+func TestLoadConfigWithTLS(t *testing.T) {
+	// Create a temporary config file with TLS configuration
+	tempDir := t.TempDir()
+	configPath := filepath.Join(tempDir, "test-config.yaml")
+
+	configContent := `
+server:
+  host: "localhost"
+  port: ":8443"
+cloudfront:
+  url: "https://test.cloudfront.net"
+  key_id: "test-key-id"
+  private_key: "test-key"
+tls:
+  enabled: true
+  cert_file: "/path/to/server.crt"
+  key_file: "/path/to/server.key"
+  ca_file: "/path/to/ca.crt"
+  client_auth: "require-and-verify"
+  min_version: "1.2"
+  max_version: "1.3"
+`
+
+	err := os.WriteFile(configPath, []byte(configContent), 0644)
+	if err != nil {
+		t.Fatalf("Failed to create test config file: %v", err)
+	}
+
+	// Test loading the config
+	config, err := LoadConfig(configPath)
+	if err != nil {
+		t.Fatalf("LoadConfig failed: %v", err)
+	}
+
+	// Verify TLS config
+	if !config.TLS.Enabled {
+		t.Error("Expected TLS to be enabled")
+	}
+	if config.TLS.CertFile != "/path/to/server.crt" {
+		t.Errorf("Expected cert_file '/path/to/server.crt', got '%s'", config.TLS.CertFile)
+	}
+	if config.TLS.KeyFile != "/path/to/server.key" {
+		t.Errorf("Expected key_file '/path/to/server.key', got '%s'", config.TLS.KeyFile)
+	}
+	if config.TLS.CAFile != "/path/to/ca.crt" {
+		t.Errorf("Expected ca_file '/path/to/ca.crt', got '%s'", config.TLS.CAFile)
+	}
+	if config.TLS.ClientAuth != "require-and-verify" {
+		t.Errorf("Expected client_auth 'require-and-verify', got '%s'", config.TLS.ClientAuth)
+	}
+	if config.TLS.MinVersion != "1.2" {
+		t.Errorf("Expected min_version '1.2', got '%s'", config.TLS.MinVersion)
+	}
+	if config.TLS.MaxVersion != "1.3" {
+		t.Errorf("Expected max_version '1.3', got '%s'", config.TLS.MaxVersion)
+	}
+}

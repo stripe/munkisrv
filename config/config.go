@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Server     ServerConfig     `mapstructure:"server"`
 	Cloudfront CloudfrontConfig `mapstructure:"cloudfront"`
+	TLS        TLSConfig        `mapstructure:"tls"`
 }
 
 type ServerConfig struct {
@@ -21,6 +22,16 @@ type CloudfrontConfig struct {
 	URL        string `mapstructure:"url"`
 	KeyID      string `mapstructure:"key_id"`
 	PrivateKey string `mapstructure:"private_key"`
+}
+
+type TLSConfig struct {
+	Enabled    bool   `mapstructure:"enabled"`
+	CertFile   string `mapstructure:"cert_file"`
+	KeyFile    string `mapstructure:"key_file"`
+	CAFile     string `mapstructure:"ca_file"`
+	ClientAuth string `mapstructure:"client_auth"` // "none", "request", "require", "verify-if-given", "require-and-verify"
+	MinVersion string `mapstructure:"min_version"` // "1.0", "1.1", "1.2", "1.3"
+	MaxVersion string `mapstructure:"max_version"` // "1.0", "1.1", "1.2", "1.3"
 }
 
 func LoadConfig(path string) (config Config, err error) {
