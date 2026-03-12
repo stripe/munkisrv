@@ -99,12 +99,18 @@ func munkiRepoFunc(w http.ResponseWriter, r *http.Request) {
 
 func munkiPkgFunc(cloudFrontURL string, signer *sign.URLSigner) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		pkgPath := chi.URLParam(r, "*")
+		if pkgPath == "" || strings.Contains(pkgPath, "..") {
+			http.Error(w, "invalid path", http.StatusBadRequest)
+			return
+		}
+
 		u, err := url.Parse(cloudFrontURL)
 		if err != nil {
 			http.Error(w, "failed to parse base url", http.StatusInternalServerError)
 			return
 		}
-		u.Path = path.Join(u.Path, r.URL.Path)
+		u.Path = path.Join(u.Path, "repo", "pkgs", pkgPath)
 		finalURL := u.String()
 
 		signedURL, err := signer.Sign(finalURL, time.Now().Add(1*time.Hour))
