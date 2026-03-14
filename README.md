@@ -102,6 +102,8 @@ sudo defaults write /Library/Preferences/ManagedInstalls.plist SoftwareRepoURL h
 
 The server uses AWS CloudFront signed URLs to secure package downloads. Private keys are parsed and validated at startup to ensure proper cryptographic operations.
 
+This service does not provide authentication or authorization — users are expected to handle both outside of this web service (e.g., via a reverse proxy, network policy, or service mesh)
+
 ## Health monitoring
 
 The `/healthz` endpoint checks the availability of the embedded Munki repository by attempting to open the `catalogs/all` file. This ensures the server is properly configured and the repository is accessible.
