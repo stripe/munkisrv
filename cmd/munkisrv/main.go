@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -61,13 +62,14 @@ func main() {
 	})
 
 	// Start http server
+	addr := net.JoinHostPort(cfg.Server.Host, cfg.Server.Port)
 	server := &http.Server{
-		Addr:    cfg.Server.Port,
+		Addr:    addr,
 		Handler: r,
 	}
 
 	go func() {
-		fmt.Printf("Starting server on port %s...\n", cfg.Server.Port)
+		fmt.Printf("Starting server on %s...\n", addr)
 		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("HTTP server error: %v", err)
 		}
