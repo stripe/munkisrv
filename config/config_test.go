@@ -1,6 +1,7 @@
 package config
 
 import (
+	"net"
 	"os"
 	"path/filepath"
 	"testing"
@@ -14,7 +15,7 @@ func TestLoadConfig(t *testing.T) {
 	configContent := `
 server:
   host: "localhost"
-  port: ":8080"
+  port: "8080"
 cloudfront:
   url: "https://test.cloudfront.net"
   key_id: "test-key-id"
@@ -63,8 +64,14 @@ cloudfront:
 	if config.Server.Host != "localhost" {
 		t.Errorf("Expected server host 'localhost', got '%s'", config.Server.Host)
 	}
-	if config.Server.Port != ":8080" {
-		t.Errorf("Expected server port ':8080', got '%s'", config.Server.Port)
+	if config.Server.Port != "8080" {
+		t.Errorf("Expected server port '8080', got '%s'", config.Server.Port)
+	}
+
+	// Verify bind address uses both host and port
+	addr := net.JoinHostPort(config.Server.Host, config.Server.Port)
+	if addr != "localhost:8080" {
+		t.Errorf("Expected bind address 'localhost:8080', got '%s'", addr)
 	}
 
 	// Verify cloudfront config
@@ -87,7 +94,7 @@ func TestLoadConfigWithEnvOverrides(t *testing.T) {
 	configContent := `
 server:
   host: "localhost"
-  port: ":8080"
+  port: "8080"
 cloudfront:
   url: "https://test.cloudfront.net"
   key_id: "test-key-id"
@@ -101,7 +108,7 @@ cloudfront:
 
 	// Set environment variables to override config
 	os.Setenv("ENV_SERVER_HOST", "override-host")
-	os.Setenv("ENV_SERVER_PORT", ":9090")
+	os.Setenv("ENV_SERVER_PORT", "9090")
 	defer os.Unsetenv("ENV_SERVER_HOST")
 	defer os.Unsetenv("ENV_SERVER_PORT")
 
@@ -115,8 +122,8 @@ cloudfront:
 	if config.Server.Host != "override-host" {
 		t.Errorf("Expected server host 'override-host', got '%s'", config.Server.Host)
 	}
-	if config.Server.Port != ":9090" {
-		t.Errorf("Expected server port ':9090', got '%s'", config.Server.Port)
+	if config.Server.Port != "9090" {
+		t.Errorf("Expected server port '9090', got '%s'", config.Server.Port)
 	}
 }
 
