@@ -78,7 +78,7 @@ jobs:
         cat > test-config.yaml << EOF
         server:
           host: "localhost"
-          port: ":8080"
+          port: "8080"
         cloudfront:
           url: "https://test.cloudfront.net"
           key_id: "K1HFGXOMBB6TFF"
